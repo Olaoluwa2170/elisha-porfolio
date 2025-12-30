@@ -1,6 +1,6 @@
-import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
-import { AnimatedSection } from '../AnimatedComponents';
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
+import { AnimatedSection } from "../AnimatedComponents";
 
 interface TimelineItem {
   year: string;
@@ -12,66 +12,89 @@ interface TimelineItem {
 
 const timeline: TimelineItem[] = [
   {
-    year: '2024 - Present',
-    title: 'Full Stack Developer',
-    company: 'Paritie',
-    description: 'Building the future of trading technology with real-time systems that handle millions in transactions.',
+    year: "Apr 2025 - Present", // Note: User CV says 2025, likely a typo for 2024 or future, but I will keep as 'Present' or adjust if logic dictates. Paritie seems to have two roles.
+    // The user listed "Paritie Dynamic Enterprise Limited" twice. I will combine or split based on distinct roles.
+    // Role 1: Frontend Developer (React js (vite)) - XND Project
+    title: "Frontend Developer (React/Vite)",
+    company: "Paritie Dynamic Enterprise (XND Project)",
+    description:
+      "Developing the XND trading platform, focusing on merchant flows for USDT/Giftcards and Admin Dashboard user management.",
     highlights: [
-      'Architecting real-time trading dashboards with React & TypeScript',
-      'Building backend infrastructure with Django & PostgreSQL',
-      'Implementing AI-powered data analysis pipelines',
+      "Built USDT and Giftcard flows for merchant users",
+      "Developed Dashboard and User Management for Admin",
+      "Integrated complex backend functionalities for seamless UX",
     ],
   },
   {
-    year: '2024',
-    title: 'Full Stack Developer',
-    company: 'MoneyPrep',
-    description: 'Revolutionized financial education through gamification and AI-driven personalization.',
+    year: "Oct 2024 - Present",
+    // Role 2: Frontend Developer (Next js) - Cambio Project
+    title: "Frontend Developer (Next.js)",
+    company: "Paritie Dynamic Enterprise (Cambio Project)",
+    description:
+      "Leading frontend development for the Cambio trading platform, converting UI designs into responsive, scalable code.",
     highlights: [
-      'Led frontend development for financial education platform',
-      'Built AI-powered personalization engine with FastAPI',
-      'Designed gamified learning experiences that increased engagement 3x',
+      "Implemented UI conversion for both Admin and Customer portals",
+      "Delivered scalable solutions using Next.js and Tailwind CSS",
+      "Consistently exceeded project requirements for team and client goals",
     ],
   },
   {
-    year: '2023 - 2024',
-    title: 'Lead Frontend Developer',
-    company: 'Deo Volente Academy',
-    description: 'Transformed educational delivery with modern web technologies and intuitive interfaces.',
+    year: "Feb 2024 - Feb 2025",
+    title: "Frontend Developer (Contract)",
+    company: "Money Prep",
+    description:
+      "Migrated legacy WordPress site to Next.js, significantly enhancing security, performance, and user accessibility.",
     highlights: [
-      'Spearheaded React.js migration improving performance 40%',
-      'Implemented real-time collaboration features',
-      'Mentored junior developers on modern practices',
+      "Successfully migrated company website from WordPress to Next.js",
+      "Optimized component design for improved responsiveness",
+      "Collaborated with cross-functional teams to align with business objectives",
     ],
   },
   {
-    year: '2022',
-    title: 'Machine Learning Intern',
-    company: 'AI Saturdays Lagos',
-    description: 'Deep-dived into AI/ML fundamentals while contributing to real-world projects.',
+    year: "Jul 2020 - Aug 2024",
+    title: "Frontend Developer",
+    company: "Deo Volente Academy",
+    description:
+      "Designed and developed the school website, creating a responsive platform tailored to institutional needs.",
     highlights: [
-      'Built regression models for price prediction',
-      'Collaborated on open-source AI initiatives',
-      'Presented research findings to 100+ attendees',
+      "Implemented dynamic student assistance request forms",
+      "Integrated secure data storage for sensitive info",
+      "Ensured WCAG compliance for better accessibility",
+    ],
+  },
+  {
+    year: "Expected 2026",
+    title: "B.Tech in Computer Science",
+    company: "Federal University of Technology",
+    description:
+      "4.62 CGPA. Major in Computer Science, Algorithms, AI, and Database Administration.",
+    highlights: [
+      "Focus: Algorithms, Data Structures, Logic, and AI",
+      "Participated in AI Saturdays Lagos (2x)",
+      "Gained advanced knowledge in Artificial Intelligence",
     ],
   },
 ];
 
 function TimelineCard({ item, index }: { item: TimelineItem; index: number }) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-100px' });
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
     <motion.div
       ref={ref}
       initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-      animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+      animate={
+        isInView
+          ? { opacity: 1, x: 0 }
+          : { opacity: 0, x: index % 2 === 0 ? -50 : 50 }
+      }
       transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
       className="relative pl-8 md:pl-12 pb-12 last:pb-0"
     >
       {/* Timeline line */}
       <div className="absolute left-0 top-0 bottom-0 w-px bg-border" />
-      
+
       {/* Timeline dot */}
       <motion.div
         initial={{ scale: 0 }}
@@ -90,10 +113,13 @@ function TimelineCard({ item, index }: { item: TimelineItem; index: number }) {
         <h3 className="text-xl font-bold text-foreground mb-1">{item.title}</h3>
         <p className="text-primary font-medium mb-3">{item.company}</p>
         <p className="text-muted-foreground mb-4">{item.description}</p>
-        
+
         <ul className="space-y-2">
           {item.highlights.map((highlight, i) => (
-            <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+            <li
+              key={i}
+              className="flex items-start gap-2 text-sm text-muted-foreground"
+            >
               <span className="w-1.5 h-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
               {highlight}
             </li>
@@ -119,8 +145,8 @@ export function JourneySection() {
             The Path So Far
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mb-16">
-            Every role has shaped my perspective. Every project has expanded my capabilities. 
-            Here's how I got here.
+            Every role has shaped my perspective. Every project has expanded my
+            capabilities. Here's how I got here.
           </p>
         </AnimatedSection>
 

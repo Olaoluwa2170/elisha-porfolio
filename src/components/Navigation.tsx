@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import { ThemeToggle } from "./ThemeToggle";
 
 const navLinks = [
   { label: "Vision", href: "#vision" },
@@ -35,10 +34,6 @@ export function Navigation() {
               <span className="absolute bottom-0 left-0 w-full h-[2px] bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out origin-center" />
             </a>
           ))}
-        </div>
-
-        <div className="pl-2 border-l border-border/50">
-          <ThemeToggle />
         </div>
       </div>
     </motion.nav>

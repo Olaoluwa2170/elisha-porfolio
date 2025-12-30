@@ -7,43 +7,6 @@
 /* MongoDB LeafyGreen-inspired Design System */
 @layer base {
   :root {
-    /* MongoDB Light Mode */
-    --background: 0 0% 100%;
-    --foreground: 200 50% 10%; /* Slate 900 equivalent */
-
-    --card: 0 0% 96%;
-    --card-foreground: 200 50% 10%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 200 50% 10%;
-
-    /* MongoDB Green #00ED64 (Forest Green) -> HSL approx: 145 100% 46% */
-    --primary: 145 100% 46%;
-    --primary-foreground: 200 50% 10%; /* Dark text on bright green */
-
-    --secondary: 200 20% 90%;
-    --secondary-foreground: 200 50% 10%;
-
-    --muted: 200 20% 94%;
-    --muted-foreground: 200 10% 40%;
-
-    --accent: 145 100% 46%;
-    --accent-foreground: 200 50% 10%;
-
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 200 10% 85%;
-    --input: 200 10% 85%;
-    --ring: 145 100% 46%;
-
-    --radius: 0.25rem; /* More technical, smaller radius */
-
-    /* Technical Grid Pattern */
-    --grid-color: rgba(0, 0, 0, 0.05);
-  }
-
-  .dark {
     /* MongoDB Dark Mode - Slate #001E2B -> HSL: 198 100% 8% */
     --background: 198 100% 8%;
     --foreground: 0 0% 95%;
@@ -74,6 +37,9 @@
     --input: 198 50% 20%;
     --ring: 145 100% 46%;
 
+    --radius: 0.25rem; /* More technical, smaller radius */
+
+    /* Technical Grid Pattern */
     --grid-color: rgba(255, 255, 255, 0.05);
   }
 }

@@ -67,7 +67,7 @@ const timeline: TimelineItem[] = [
     title: "B.Tech in Computer Science",
     company: "Federal University of Technology",
     description:
-      "4.62 CGPA. Major in Computer Science, Algorithms, AI, and Database Administration.",
+      "First Class Honours (4.72/5.0). Major in Computer Science, Algorithms, AI, and Database Administration.",
     highlights: [
       "Focus: Algorithms, Data Structures, Logic, and AI",
       "Participated in AI Saturdays Lagos (2x)",

@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
+import { Link, useLocation } from "react-router-dom";
 
-const navLinks = [
+const sectionLinks = [
   { label: "Vision", href: "#vision" },
   { label: "Journey", href: "#journey" },
   { label: "Work", href: "#work" },
@@ -8,6 +9,9 @@ const navLinks = [
 ];
 
 export function Navigation() {
+  const location = useLocation();
+  const onHome = location.pathname === "/";
+
   return (
     <motion.nav
       initial={{ opacity: 0, y: -20 }}
@@ -16,24 +20,42 @@ export function Navigation() {
       className="fixed top-4 left-0 right-0 z-50 flex justify-center pointer-events-none"
     >
       <div className="pointer-events-auto bg-background/80 backdrop-blur-md border border-border/50 rounded-full px-6 py-3 shadow-lg flex items-center gap-6 md:gap-8">
-        <a
-          href="#"
+        <Link
+          to="/"
           className="text-lg font-bold tracking-tight text-foreground hover:text-primary transition-colors"
         >
           EB<span className="text-primary">.</span>
-        </a>
+        </Link>
 
         <div className="hidden md:flex items-center gap-1">
-          {navLinks.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors relative group"
-            >
-              {link.label}
-              <span className="absolute bottom-0 left-0 w-full h-[2px] bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out origin-center" />
-            </a>
-          ))}
+          {sectionLinks.map((link) =>
+            onHome ? (
+              <a
+                key={link.label}
+                href={link.href}
+                className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors relative group"
+              >
+                {link.label}
+                <span className="absolute bottom-0 left-0 w-full h-[2px] bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out origin-center" />
+              </a>
+            ) : (
+              <Link
+                key={link.label}
+                to={`/${link.href}`}
+                className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors relative group"
+              >
+                {link.label}
+                <span className="absolute bottom-0 left-0 w-full h-[2px] bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out origin-center" />
+              </Link>
+            )
+          )}
+          <Link
+            to="/blog"
+            className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors relative group"
+          >
+            Blog
+            <span className="absolute bottom-0 left-0 w-full h-[2px] bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out origin-center" />
+          </Link>
         </div>
       </div>
     </motion.nav>

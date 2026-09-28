@@ -106,7 +106,34 @@ export default {
         "text-reveal":
           "text-reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards",
       },
+      typography: ({ theme }: { theme: (path: string) => string }) => ({
+        invert: {
+          css: {
+            "--tw-prose-body": theme("colors.muted.foreground"),
+            "--tw-prose-headings": theme("colors.foreground"),
+            "--tw-prose-bold": theme("colors.foreground"),
+            "--tw-prose-links": theme("colors.primary.DEFAULT"),
+            "--tw-prose-bullets": theme("colors.primary.DEFAULT"),
+            "--tw-prose-quotes": theme("colors.foreground"),
+            "--tw-prose-quote-borders": theme("colors.primary.DEFAULT"),
+            "--tw-prose-code": theme("colors.primary.DEFAULT"),
+            "--tw-prose-hr": theme("colors.border"),
+            "--tw-prose-th-borders": theme("colors.border"),
+            "--tw-prose-td-borders": theme("colors.border"),
+            a: { textDecoration: "none", fontWeight: "600" },
+            "a:hover": { textDecoration: "underline" },
+            code: {
+              backgroundColor: theme("colors.secondary.DEFAULT"),
+              padding: "0.15rem 0.4rem",
+              borderRadius: "0.25rem",
+              fontWeight: "500",
+            },
+            "code::before": { content: '""' },
+            "code::after": { content: '""' },
+          },
+        },
+      }),
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 } satisfies Config;

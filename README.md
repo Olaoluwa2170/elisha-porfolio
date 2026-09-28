@@ -71,3 +71,23 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+
+## Blog & admin panel
+
+The site has a `/blog` section and a `/admin` panel for publishing posts without touching code.
+
+**Content model**: posts live in `src/content/blog/posts.json`. The admin panel edits this file directly via the GitHub API, so publishing a post is a real commit to `main` — your Vercel project then redeploys automatically. There's no database.
+
+**One-time setup**:
+
+1. Set an admin passphrase:
+   ```sh
+   node scripts/hash-password.mjs "your-passphrase"
+   ```
+   Put the resulting hash in a local `.env` file as `VITE_ADMIN_PASSWORD_HASH=...` (see `.env.example`), and add the same variable to your Vercel project's Environment Variables (Production + Preview). Redeploy for it to take effect.
+2. Create a GitHub [fine-grained personal access token](https://github.com/settings/tokens?type=beta) scoped to just this repo, with **Contents: Read and write** permission.
+3. Open `/admin` on the live site, enter the passphrase, then paste the token into the GitHub connection panel (owner/repo/branch default to this repo — adjust if needed) and hit "Save settings". The token is stored only in your browser's local storage.
+
+**Publishing**: fill in the post form (title, topic, description, cover image — upload a file or paste a URL — and Markdown content) and hit Publish. It commits straight to `posts.json` (and to `public/blog/` for an uploaded cover), and the post appears live once the redeploy finishes (usually under two minutes).
+
+**Social previews**: link-sharing apps (Twitter/X, Slack, WhatsApp, LinkedIn, ...) don't run JavaScript, so a plain client-rendered SPA can't give them a per-post preview card. A `postbuild` script (`scripts/prerender-blog.mjs`) generates a static HTML file per post with the right `<title>`/description/`og:image` baked in; `vercel.json`'s `cleanUrls` serves those for the exact post URLs while everything else still falls through to the SPA. If you move off Vercel, keep an equivalent "serve `dist/blog/<slug>.html` for `/blog/<slug>`" rule.

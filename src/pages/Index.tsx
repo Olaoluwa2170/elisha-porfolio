@@ -1,5 +1,6 @@
 import { Suspense, lazy } from "react";
 import { Navigation } from "@/components/Navigation";
+import { SEO } from "@/components/SEO";
 import { HeroSection } from "@/components/sections/HeroSection";
 
 // Lazy load sections that are below the fold
@@ -44,6 +45,11 @@ const SectionSkeleton = () => (
 const Index = () => {
   return (
     <main className="min-h-screen bg-background text-foreground selection:bg-primary/20">
+      <SEO
+        title="Elisha Babalola | Software Engineer"
+        description="Software Engineer with 4+ years of experience building scalable web applications, fintech solutions, and AI-powered products. Currently shaping the future of trading at Paritie."
+        url="/"
+      />
       <Navigation />
 
       {/* Hero is above the fold, so we keep it eager loaded */}

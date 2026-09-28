@@ -1,11 +1,1 @@
-[
-  {
-    "slug": "hello-world",
-    "title": "Hello, World — Welcome to My Blog",
-    "description": "The first post on this blog — a quick note on what to expect here and why I decided to start writing.",
-    "topic": "Announcement",
-    "coverImage": "/og-image.png",
-    "date": "2026-09-27",
-    "content": "This is a placeholder post, published to prove the pipeline works end to end — content, cover image, and social preview.\n\nFrom here I'll be writing about things I run into building fintech products at Paritie, lessons from migrating legacy sites, and notes on AI-assisted engineering.\n\nYou can publish, edit, or delete this post from the `/admin` panel."
-  }
-]
+[]

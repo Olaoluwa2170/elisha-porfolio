@@ -90,4 +90,6 @@ The site has a `/blog` section and a `/admin` panel for publishing posts without
 
 **Publishing**: fill in the post form (title, topic, description, cover image — upload a file or paste a URL — and Markdown content) and hit Publish. It commits straight to `posts.json` (and to `public/blog/` for an uploaded cover), and the post appears live once the redeploy finishes (usually under two minutes).
 
+**Private posts**: tick "Private" in the editor to save a post without showing it on the site. These go to `content-private/posts.json`, which is outside `src/` so it's never bundled or pre-rendered. It's still in your GitHub repo, so keep the repo private if the content is truly sensitive.
+
 **Social previews**: link-sharing apps (Twitter/X, Slack, WhatsApp, LinkedIn, ...) don't run JavaScript, so a plain client-rendered SPA can't give them a per-post preview card. A `postbuild` script (`scripts/prerender-blog.mjs`) generates a static HTML file per post with the right `<title>`/description/`og:image` baked in; `vercel.json`'s `cleanUrls` serves those for the exact post URLs while everything else still falls through to the SPA. If you move off Vercel, keep an equivalent "serve `dist/blog/<slug>.html` for `/blog/<slug>`" rule.

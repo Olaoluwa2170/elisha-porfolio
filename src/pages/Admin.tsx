@@ -3,8 +3,9 @@ import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { ArrowLeft, Loader2, Trash2 } from "lucide-react";
+import { ArrowLeft, Loader2, Lock, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -18,6 +19,7 @@ import {
 import {
   clearGithubConfig,
   deletePost,
+  listPrivatePosts,
   loadGithubConfig,
   publishPost,
   saveGithubConfig,
@@ -129,6 +131,8 @@ const Admin = () => {
   );
   const [testingConnection, setTestingConnection] = useState(false);
   const [posts, setPosts] = useState<BlogPost[]>(getAllPosts());
+  const [privatePosts, setPrivatePosts] = useState<BlogPost[]>([]);
+  const [isPrivate, setIsPrivate] = useState(false);
   const [editingSlug, setEditingSlug] = useState<string | null>(null);
   const [form, setForm] = useState<PostFormState>(emptyForm);
   const [slugTouched, setSlugTouched] = useState(false);
@@ -144,9 +148,27 @@ const Admin = () => {
     }
   }, [form.title, slugTouched]);
 
+  const refreshPrivatePosts = async (cfg: GithubConfig) => {
+    if (!cfg.token) return;
+    try {
+      setPrivatePosts(await listPrivatePosts(cfg));
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : "Couldn't load private posts"
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (authed) refreshPrivatePosts(config);
+    // Only on first load; later refreshes are explicit.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authed]);
+
   const handleSaveConfig = () => {
     saveGithubConfig(config);
     toast.success("GitHub settings saved to this browser");
+    refreshPrivatePosts(config);
   };
 
   const handleTestConnection = async () => {
@@ -164,13 +186,15 @@ const Admin = () => {
   const resetForm = () => {
     setForm(emptyForm);
     setEditingSlug(null);
+    setIsPrivate(false);
     setSlugTouched(false);
     setCoverFile(null);
     setCoverPreview("");
     setCoverMode("url");
   };
 
-  const handleEditPost = (post: BlogPost) => {
+  const handleEditPost = (post: BlogPost, priv: boolean) => {
+    setIsPrivate(priv);
     setForm({
       slug: post.slug,
       title: post.title,
@@ -187,14 +211,22 @@ const Admin = () => {
     setCoverPreview("");
   };
 
-  const handleDelete = async (slug: string) => {
+  const handleDelete = async (slug: string, priv: boolean) => {
     if (!confirm(`Delete post "${slug}"? This commits directly to your repo.`)) {
       return;
     }
     try {
-      await deletePost(config, slug);
-      toast.success("Post deleted. It will disappear after the next deploy.");
-      setPosts((prev) => prev.filter((p) => p.slug !== slug));
+      await deletePost(config, slug, priv);
+      toast.success(
+        priv
+          ? "Private post deleted."
+          : "Post deleted. It will disappear after the next deploy."
+      );
+      if (priv) {
+        setPrivatePosts((prev) => prev.filter((p) => p.slug !== slug));
+      } else {
+        setPosts((prev) => prev.filter((p) => p.slug !== slug));
+      }
       if (editingSlug === slug) resetForm();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Failed to delete post");
@@ -241,10 +273,24 @@ const Admin = () => {
         content: form.content,
       };
 
-      await publishPost(config, post);
-      toast.success(
-        `Published "${post.title}". Redeploy usually takes a minute or two.`
-      );
+      await publishPost(config, post, isPrivate);
+      const upsert = (list: BlogPost[]) => [
+        post,
+        ...list.filter((p) => p.slug !== post.slug),
+      ];
+      const without = (list: BlogPost[]) =>
+        list.filter((p) => p.slug !== post.slug);
+      if (isPrivate) {
+        setPrivatePosts(upsert);
+        setPosts(without);
+        toast.success(`Saved "${post.title}" privately. It won't appear on the site.`);
+      } else {
+        setPosts(upsert);
+        setPrivatePosts(without);
+        toast.success(
+          `Published "${post.title}". Redeploy usually takes a minute or two.`
+        );
+      }
       resetForm();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Failed to publish");
@@ -510,9 +556,31 @@ const Admin = () => {
                 )}
               </div>
 
+              <div className="flex items-start gap-3 rounded-lg border border-border p-4">
+                <Checkbox
+                  id="private"
+                  checked={isPrivate}
+                  onCheckedChange={(checked) => setIsPrivate(checked === true)}
+                  className="mt-0.5"
+                />
+                <div>
+                  <Label htmlFor="private" className="cursor-pointer">
+                    Private — save it, but don't show it on the site
+                  </Label>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Stored in a separate file that's never built into the
+                    website. Untick later and save to publish it. Uploaded cover
+                    images still go in the public folder, so use "Image URL" or
+                    skip the cover for anything truly sensitive.
+                  </p>
+                </div>
+              </div>
+
               <Button type="submit" disabled={isPublishing} className="w-full">
                 {isPublishing ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
+                ) : isPrivate ? (
+                  "Save privately"
                 ) : editingSlug ? (
                   "Save changes"
                 ) : (
@@ -539,14 +607,14 @@ const Admin = () => {
                 >
                   <button
                     type="button"
-                    onClick={() => handleEditPost(post)}
+                    onClick={() => handleEditPost(post, false)}
                     className="text-left text-sm font-medium hover:text-primary transition-colors"
                   >
                     {post.title}
                   </button>
                   <button
                     type="button"
-                    onClick={() => handleDelete(post.slug)}
+                    onClick={() => handleDelete(post.slug, false)}
                     aria-label={`Delete ${post.title}`}
                     className="text-muted-foreground hover:text-destructive transition-colors shrink-0"
                   >
@@ -554,6 +622,41 @@ const Admin = () => {
                   </button>
                 </li>
               ))}
+            </ul>
+
+            <h2 className="text-lg font-semibold mt-8 mb-1 flex items-center gap-2">
+              <Lock className="w-4 h-4" />
+              Private ({privatePosts.length})
+            </h2>
+            <p className="text-xs text-muted-foreground mb-4">
+              Only visible here, and only once your GitHub token is saved.
+            </p>
+            <ul className="space-y-3">
+              {privatePosts.map((post) => (
+                <li
+                  key={post.slug}
+                  className="flex items-start justify-between gap-2 border-b border-border pb-3 last:border-0"
+                >
+                  <button
+                    type="button"
+                    onClick={() => handleEditPost(post, true)}
+                    className="text-left text-sm font-medium hover:text-primary transition-colors"
+                  >
+                    {post.title}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(post.slug, true)}
+                    aria-label={`Delete ${post.title}`}
+                    className="text-muted-foreground hover:text-destructive transition-colors shrink-0"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </li>
+              ))}
+              {privatePosts.length === 0 && (
+                <li className="text-xs text-muted-foreground">None yet.</li>
+              )}
             </ul>
           </section>
         </div>

@@ -12,7 +12,7 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
 const distDir = path.join(root, "dist");
-const SITE_URL = "https://elishababalola.dev";
+const SITE_URL = "https://elisha-porfolio.vercel.app";
 
 const template = readFileSync(path.join(distDir, "index.html"), "utf-8");
 const posts = JSON.parse(

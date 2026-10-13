@@ -3,7 +3,7 @@ import type { BlogPost } from "@/content/blog/types";
 
 const posts = postsData as BlogPost[];
 
-export const SITE_URL = "https://elishababalola.dev";
+export const SITE_URL = "https://elisha-porfolio.vercel.app";
 
 export function absoluteUrl(pathOrUrl: string): string {
   return pathOrUrl.startsWith("http") ? pathOrUrl : `${SITE_URL}${pathOrUrl}`;

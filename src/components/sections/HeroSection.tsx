@@ -4,17 +4,27 @@ import { ArrowDown } from "lucide-react";
 export function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background">
-      {/* Technical Grid Background */}
-      <div className="absolute inset-0 bg-grid-pattern opacity-[0.2]" />
+      {/* Full-bleed Hero Artwork */}
+      <motion.img
+        src="/hero.jpg"
+        alt=""
+        aria-hidden="true"
+        initial={{ opacity: 0, scale: 1.08 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
+        className="absolute inset-0 w-full h-full object-cover object-[60%_center] md:object-center pointer-events-none select-none"
+      />
 
-      {/* Gradient Overlay for Depth */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background pointer-events-none" />
-
-      {/* Decorative Orb Effect - Replaced blobs with subtle glow */}
-      <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-primary/20 rounded-full blur-[100px] opacity-20 animate-pulse" />
+      {/* Overlays: overall dim, heavier on the text side, fades at top/bottom */}
+      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <div className="absolute inset-0 bg-background/45 md:bg-background/25" />
+        <div className="absolute inset-0 hidden md:block bg-gradient-to-r from-background/85 via-background/45 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-background/70 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-background to-transparent" />
+      </div>
 
       <div className="content-container relative z-10 pt-20">
-        <div className="max-w-5xl mx-auto text-center md:text-left">
+        <div className="max-w-5xl mx-auto text-center md:text-left [text-shadow:0_2px_20px_rgb(0_0_0/0.5)]">
           {/* Eyebrow */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
